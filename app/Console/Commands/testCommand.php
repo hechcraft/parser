@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Nesk\Puphpeteer\Puppeteer;
 use Nesk\Rialto\Data\JsFunction;
-use PDepend\Util\Log;
 
 class testCommand extends Command
 {
@@ -40,13 +39,8 @@ class testCommand extends Command
      */
     public function handle()
     {
-        $puppeteer = new Puppeteer([
-//            'read_timeout' => 95,
-//            'idle_timeout' => 90,
-        ]);
-        $browser = $puppeteer->launch([
-          'headless' => false,
-        ]);
+        $puppeteer = new Puppeteer();
+        $browser = $puppeteer->launch();
 
         $page = $browser->newPage();
 //        $page->goto('https://www.olx.ua/d/obyavlenie/prodam-raketu-kawasaki-IDM9xRu.html');
@@ -55,7 +49,7 @@ class testCommand extends Command
 //            'timeout' => 90000
         ]);
 
-        $data = $page->evaluate(JsFunction::createWithBody('return document.documentElement.outerHTML'));
+//        $data = $page->evaluate(JsFunction::createWithBody('return document.documentElement.outerHTML'));
 //        olx.ua
 //        $data = $page->evaluate(JsFunction::createWithBody("
 //            return {
