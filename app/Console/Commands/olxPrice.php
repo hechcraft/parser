@@ -13,7 +13,7 @@ class olxPrice extends Command
      *
      * @var string
      */
-    protected $signature = 'price:olx {url}';
+    protected $signature = 'price:olx';
 
     /**
      * The console command description.
@@ -40,25 +40,29 @@ class olxPrice extends Command
     public function handle()
     {
         $puppeteer = new Puppeteer();
-        $browser = $puppeteer->launch();
+        $browser = $puppeteer->launch([
+            'headless' => true,
+            'args' => [
+                '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            ]
+        ]);
 
         $page = $browser->newPage();
 //        $page->goto('https://www.olx.ua/d/obyavlenie/prodam-raketu-kawasaki-IDM9xRu.html');
-//        $page->goto('https://www.olx.ua/nedvizhimost/kvartiry-komnaty/arenda-kvartir-komnat/lugansk/');
-        $page->goto($this->argument('url'));
+        $page->goto('https://www.olx.ua/nedvizhimost/kvartiry-komnaty/arenda-kvartir-komnat/lugansk/');
+//        $page->goto($this->argument('url'));
 
-        $parserData = $page->evaluate(JsFunction::createWithBody("
-            var parserData = Array.from(document.querySelectorAll(\"#offers_table .offer-wrapper\")).
+        $str = "Array.from(document.querySelectorAll(\"#offers_table .offer-wrapper\")).
                         map(node => ({ name: node.querySelector(\"h3 >a[class*= link]\").innerText,
                             url: node.querySelector(\"h3>a[class*=link]\").getAttribute('href'),
                             price: node.querySelector(\"p.price > strong\").innerText,
-                            img: node.querySelector(\"a[class^=thumb] > img\").getAttribute('src')}));
+                            img: node.querySelector(\"a[class^=thumb] > img\").getAttribute('src')}))";
+        $parserData = $page->evaluate(JsFunction::createWithBody("
             return {
-                parserData: parserData,
-                arrayLength: parserData.length
+                parserData: $str,
             };
         "));
-
+        dd(count(reset($parserData)));
         if ($parserData['arrayLength'] != 0) {
             $browser->close();
             return $parserData;
@@ -70,6 +74,7 @@ class olxPrice extends Command
             };
         "));
 
+        dd($parserData);
         $browser->close();
         return $parserData;
     }
