@@ -6,6 +6,9 @@ class ParserFactory
 {
     public static function make(string $url)
     {
+        $test = new DiscoverPageType();
+        dd($test->discover($url));
+
         $host = parse_url($url, PHP_URL_HOST);
 
         switch ($host) {
