@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Parser\marketPlaceParser;
 use Illuminate\Console\Command;
 use App\Parser\ParserFactory;
 
@@ -38,8 +39,8 @@ class parser extends Command
      */
     public function handle()
     {
-        $test = ParserFactory::make($this->argument('url'));
-        dd($test->dataFromPage());
+        $test = new marketPlaceParser($this->argument('url'));
+        dd($test->parser());
         return ParserFactory::make($this->argument('url'));
     }
 }

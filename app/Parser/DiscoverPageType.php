@@ -3,54 +3,46 @@
 
 namespace App\Parser;
 
-
+use App\Parser\Avito\AvitoGroup;
+use App\Parser\Avito\AvitoSingle;
+use App\Parser\Dns\DnsSingle;
+use App\Parser\Dns\DnsGroup;
+use App\Parser\Olx\OlxGroup;
+use App\Parser\Olx\OlxSingle;
 use Nesk\Puphpeteer\Puppeteer;
 use Nesk\Rialto\Data\JsFunction;
 
 class DiscoverPageType
 {
-    public function discover(string $url)
+    private $url;
+    private $page;
+
+    private $pageTypes = array(
+        DnsSingle::class,
+        DnsGroup::class,
+        AvitoSingle::class,
+        AvitoGroup::class,
+        OlxSingle::class,
+        OlxGroup::class,
+    );
+
+    public function __construct(string $url, $page)
     {
-        $puppeteer = new Puppeteer();
-        $browser = $puppeteer->launch([
-            'headless' => true,
-            'args' => [
-                '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-            ]
-        ]);
+        $this->url = $url;
+        $this->page = $page;
+    }
 
-        $page = $browser->newPage();
+    public function discover()
+    {
+        $host = str_replace('www.', "", parse_url($this->url, PHP_URL_HOST));
 
-        $page->goto($url, ['waitUntil' => 'networkidle2']);
-
-        $pageType['dnsSingle'] = $page->evaluate(JsFunction::createWithBody("
-            return document.querySelector('h1[class=product-card-top__title]');
-        "));
-
-        $pageType['dnsGroup'] = $page->evaluate(JsFunction::createWithBody("
-            return document.querySelector('div[class=products-list__content]');
-        "));
-
-        $pageType['olxSingle'] = $page->evaluate(JsFunction::createWithBody("
-            return document.querySelector('[name=user_ads]');
-        "));
-
-        $pageType['olxGroup'] = $page->evaluate(JsFunction::createWithBody("
-            return document.querySelector('#offers_table .offer-wrapper');
-        "));
-
-        $pageType['avitoSingle'] = $page->evaluate(JsFunction::createWithBody("
-            return document.querySelector('.title-info-title-text');
-        "));
-
-        $pageType['avitoGroup'] = $page->evaluate(JsFunction::createWithBody("
-            return document.querySelector('div[class^=iva-item-content]') ? document.querySelector('div[class^=iva-item-content]').innerText : null;
-        "));
-
-        foreach ($pageType as $key => $type) {
-            if ($type != null){
-                return $key;
+        foreach ($this->pageTypes as $type) {
+            $typeClass = new $type;
+            if ($typeClass->matchesUrl($host) && $this->page->evaluate(JsFunction::createWithBody($typeClass->getPageDiscroveryScript()))) {
+                return $typeClass;
             }
         }
     }
 }
+
+

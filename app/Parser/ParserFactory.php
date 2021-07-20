@@ -6,10 +6,11 @@ class ParserFactory
 {
     public static function make(string $url)
     {
-        $test = new DiscoverPageType();
-        dd($test->discover($url));
+        $test = new DiscoverPageType($url, $host);
+        dd($test->discover());
 
         $host = parse_url($url, PHP_URL_HOST);
+        $host = ltrim($host, 'www.');
 
         switch ($host) {
             case "www.olx.ua":

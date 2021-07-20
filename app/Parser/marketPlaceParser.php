@@ -14,7 +14,7 @@ class marketPlaceParser
         $this->url = $url;
     }
 
-    public function parser(string $groupCommand, string $singleCommand): array
+    public function parser(): array
     {
         $puppeteer = new Puppeteer();
         $browser = $puppeteer->launch([
@@ -27,24 +27,16 @@ class marketPlaceParser
         $page = $browser->newPage();
 
         $page->goto($this->url, ['waitUntil' => 'networkidle2']);
+
+        $pageType = new DiscoverPageType($this->url, $page);
+
+        $parserOption = $pageType->discover()->parserOption();
         $parserData = $page->evaluate(JsFunction::createWithBody("
             return {
-                parserData: $groupCommand,
+                parserData: $parserOption,
             };
         "));
 
-        if (count(reset($parserData)) != 0) {
-            $browser->close();
-            return $parserData;
-        }
-
-        $parserData = $page->evaluate(JsFunction::createWithBody("
-            return {
-                parserData: $singleCommand,
-            };
-        "));
-
-        $browser->close();
         return $parserData;
     }
 }
