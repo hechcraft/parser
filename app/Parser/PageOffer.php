@@ -19,7 +19,7 @@ class PageOffer
         $this->url = $url;
     }
 
-    public static function fromProvider($parserData): object
+    public static function fromProvider($parserData): self
     {
         return new self(
             data_get($parserData, 'name'),

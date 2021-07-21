@@ -9,7 +9,6 @@ use App\Parser\Dns\DnsSingle;
 use App\Parser\Dns\DnsGroup;
 use App\Parser\Olx\OlxGroup;
 use App\Parser\Olx\OlxSingle;
-use Nesk\Puphpeteer\Puppeteer;
 use Nesk\Rialto\Data\JsFunction;
 
 class DiscoverPageType
@@ -32,7 +31,7 @@ class DiscoverPageType
         $this->page = $page;
     }
 
-    public function discover(): object
+    public function discover(): ParserProvider
     {
         $host = str_replace('www.', "", parse_url($this->url, PHP_URL_HOST));
 

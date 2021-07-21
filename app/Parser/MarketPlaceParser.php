@@ -33,12 +33,10 @@ class MarketPlaceParser
         $parserOption = $pageType->discover()->parserOption();
         $parserData = $page->evaluate(JsFunction::createWithBody("
             return $parserOption "));
+        $browser->close();
 
-        $pageOffer = collect($parserData)->map(function ($item){
+        return collect($parserData)->map(function ($item){
             return PageOffer::fromProvider($item);
         });
-
-        $browser->close();
-        return $pageOffer;
     }
 }

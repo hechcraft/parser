@@ -24,6 +24,6 @@ class OlxGroup implements ParserProvider
             map(node => ({ name: node.querySelector('h3 >a[class$=detailsLink]').innerText,
                             url: node.querySelector('h3>a[class$=detailsLink]').getAttribute('href'),
                             price: node.querySelector('p.price > strong').innerText,
-                            img: node.querySelector('a[class^=thumb] > img') ? node.querySelector('a[class^=thumb] > img').getAttribute('src') : 'Без фото'}))";
+                            img: node.querySelector('a[class^=thumb] > img') ? node.querySelector('a[class^=thumb] > img').getAttribute('src') : null}))";
     }
 }
