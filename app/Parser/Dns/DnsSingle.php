@@ -20,11 +20,11 @@ class DnsSingle implements ParserProvider
 
     public function parserOption(): string
     {
-        return "{
+        return "[{
                         name: document.querySelector('.product-card-top__title').innerText,
                         price: document.querySelector('.product-buy__price').innerText,
                         image: document.querySelector('img[class^=product-images-slider__img]').getAttribute('src'),
                         url: document.URL,
-                        }";
+                        }]";
     }
 }

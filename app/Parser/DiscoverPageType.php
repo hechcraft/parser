@@ -32,13 +32,13 @@ class DiscoverPageType
         $this->page = $page;
     }
 
-    public function discover(): string
+    public function discover(): object
     {
         $host = str_replace('www.', "", parse_url($this->url, PHP_URL_HOST));
 
         foreach ($this->pageTypes as $type) {
             $typeClass = new $type;
-            if ($typeClass->matchesUrl($host) && $this->page->evaluate(JsFunction::createWithBody($typeClass->getPageDiscroveryScript()))) {
+            if ($typeClass->matchesUrl($host) && $this->page->evaluate(JsFunction::createWithBody($typeClass->getPageDiscoveryScript()))) {
                 return $typeClass;
             }
         }

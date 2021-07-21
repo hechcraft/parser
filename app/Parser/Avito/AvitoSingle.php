@@ -20,11 +20,11 @@ class AvitoSingle implements ParserProvider
 
     public function parserOption(): string
     {
-        return "{
+        return "[{
                   price: document.querySelector('span[class^=price-value-string]').innerText,
                   title: document.querySelector('span[class=title-info-title-text]').innerText,
                   image: document.querySelector('div[class^=gallery-img-frame] > img').getAttribute('src'),
                   url: document.url
-                }";
+                }]";
     }
 }
