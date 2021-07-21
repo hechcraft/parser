@@ -5,7 +5,7 @@ namespace App\Parser;
 use Nesk\Puphpeteer\Puppeteer;
 use Nesk\Rialto\Data\JsFunction;
 
-class marketPlaceParser
+class MarketPlaceParser
 {
     public $url;
 

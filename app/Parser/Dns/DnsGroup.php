@@ -4,7 +4,9 @@
 namespace App\Parser\Dns;
 
 
-class DnsGroup
+use App\Parser\ParserProviders;
+
+class DnsGroup implements ParserProviders
 {
     public function getPageDiscroveryScript(): string
     {
@@ -14,5 +16,14 @@ class DnsGroup
     public function matchesUrl(string $host): bool
     {
         return $host === "dns-shop.ru";
+    }
+
+    public function parserOption(): string
+    {
+        return "Array.from(document.querySelectorAll('div[data-id=product]'))
+                        .map(node => ({name: node.querySelector('a[class^=catalog-product__name]').innerText,
+                        url: 'https://www.dns-shop.ru' + node.querySelector('a[class^=catalog-product__name]').getAttribute('href'),
+                        image: node.querySelector('.catalog-product__image-link img').getAttribute('src'),
+                        price: node.querySelector('.product-buy__price').innerText}))";
     }
 }

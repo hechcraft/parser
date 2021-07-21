@@ -2,11 +2,11 @@
 
 namespace App\Console\Commands;
 
-use App\Parser\marketPlaceParser;
+use App\Parser\MarketPlaceParser;
 use Illuminate\Console\Command;
 use App\Parser\ParserFactory;
 
-class parser extends Command
+class Parser extends Command
 {
     /**
      * The name and signature of the console command.
@@ -35,12 +35,11 @@ class parser extends Command
     /**
      * Execute the console command.
      *
-     * @return int
+     * @return array
      */
-    public function handle()
+    public function handle(): array
     {
-        $test = new marketPlaceParser($this->argument('url'));
-        dd($test->parser());
-        return ParserFactory::make($this->argument('url'));
+        $getParser = new MarketPlaceParser($this->argument('url'));
+        return $getParser->parser();
     }
 }

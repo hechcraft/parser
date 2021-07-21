@@ -4,19 +4,21 @@
 namespace App\Parser\Dns;
 
 
-class DnsSingle
+use App\Parser\ParserProviders;
+
+class DnsSingle implements ParserProviders
 {
     public function getPageDiscroveryScript(): string
     {
         return "return document.querySelector('h1[class=product-card-top__title]')";
     }
 
-    public function matchesUrl($host): string
+    public function matchesUrl(string $host): string
     {
         return $host === "dns-shop.ru";
     }
 
-    public function parserOption()
+    public function parserOption(): string
     {
         return "{
                         name: document.querySelector('.product-card-top__title').innerText,
