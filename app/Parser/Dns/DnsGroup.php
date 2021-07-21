@@ -4,11 +4,11 @@
 namespace App\Parser\Dns;
 
 
-use App\Parser\ParserProviders;
+use App\Parser\ParserProvider;
 
-class DnsGroup implements ParserProviders
+class DnsGroup implements ParserProvider
 {
-    public function getPageDiscroveryScript(): string
+    public function getPageDiscoveryScript(): string
     {
         return "return document.querySelector('div[class=products-list__content]')";
     }

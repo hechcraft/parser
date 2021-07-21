@@ -4,16 +4,16 @@
 namespace App\Parser\Olx;
 
 
-use App\Parser\ParserProviders;
+use App\Parser\ParserProvider;
 
-class OlxGroup implements ParserProviders
+class OlxGroup implements ParserProvider
 {
-    public function getPageDiscroveryScript(): string
+    public function getPageDiscoveryScript(): string
     {
         return "return document.querySelector('#offers_table .offer-wrapper')";
     }
 
-    public function matchesUrl(string $host): string
+    public function matchesUrl(string $host): bool
     {
         return $host === "olx.ua";
     }

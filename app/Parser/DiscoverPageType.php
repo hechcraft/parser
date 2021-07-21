@@ -32,7 +32,7 @@ class DiscoverPageType
         $this->page = $page;
     }
 
-    public function discover()
+    public function discover(): string
     {
         $host = str_replace('www.', "", parse_url($this->url, PHP_URL_HOST));
 

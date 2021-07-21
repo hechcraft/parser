@@ -14,7 +14,7 @@ class MarketPlaceParser
         $this->url = $url;
     }
 
-    public function parser(): array
+    public function parser(): \Illuminate\Support\Collection
     {
         $puppeteer = new Puppeteer();
         $browser = $puppeteer->launch([
@@ -32,11 +32,8 @@ class MarketPlaceParser
 
         $parserOption = $pageType->discover()->parserOption();
         $parserData = $page->evaluate(JsFunction::createWithBody("
-            return {
-                parserData: $parserOption,
-            };
-        "));
-
-        return $parserData;
+            return $parserOption "));
+        $browser->close();
+        return PageOffer::fromProvider($parserData);
     }
 }

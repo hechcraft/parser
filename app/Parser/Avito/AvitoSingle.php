@@ -4,16 +4,16 @@
 namespace App\Parser\Avito;
 
 
-use App\Parser\ParserProviders;
+use App\Parser\ParserProvider;
 
-class AvitoSingle implements ParserProviders
+class AvitoSingle implements ParserProvider
 {
-    public function getPageDiscroveryScript(): string
+    public function getPageDiscoveryScript(): string
     {
         return "document.querySelector('.title-info-title-text')";
     }
 
-    public function matchesUrl(string $host): string
+    public function matchesUrl(string $host): bool
     {
         return $host === "avito.ru";
     }

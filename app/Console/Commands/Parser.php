@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Parser\MarketPlaceParser;
+use App\Parser\PageOffer;
 use Illuminate\Console\Command;
 use App\Parser\ParserFactory;
 
@@ -40,6 +41,7 @@ class Parser extends Command
     public function handle(): array
     {
         $getParser = new MarketPlaceParser($this->argument('url'));
+        dd($getParser->parser());
         return $getParser->parser();
     }
 }
