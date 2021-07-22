@@ -11,7 +11,7 @@ class PageOffer
     public $image;
     public $url;
 
-    private function __construct(string $name,  string $price,string $image,string $url)
+    private function __construct(string $name, string $price,$image, string $url)
     {
         $this->name = $name;
         $this->price = $price;

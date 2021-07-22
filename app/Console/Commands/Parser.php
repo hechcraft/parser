@@ -2,8 +2,11 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Offers;
+use App\Models\PriceHistory;
 use App\Parser\MarketPlaceParser;
 use App\Parser\PageOffer;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use App\Parser\ParserFactory;
 
@@ -36,12 +39,27 @@ class Parser extends Command
     /**
      * Execute the console command.
      *
-     * @return array
+     * @return void
      */
-    public function handle(): array
+    public function handle()
     {
         $getParser = new MarketPlaceParser($this->argument('url'));
-        dd($getParser->parser());
-        return $getParser->parser();
+        $currentTime = Carbon::now()->toDateTimeString();
+
+        foreach ($getParser->parser() as $item) {
+            Offers::create([
+                'page_id' => 1,
+                'name' => $item->name,
+                'image_url' => $item->url,
+                'last_checked_at' => $currentTime,
+                'offer_url' => $item->url,
+            ]);
+
+            PriceHistory::create([
+                'offer_id' => Offers::latest()->first()->id,
+                'price' => $item->price,
+                'checked_at' => $currentTime,
+            ]);
+        }
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUsersTable extends Migration
+class CreateOffersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,16 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('offers', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('page_id')->nullable();
             $table->string('name');
+            $table->string('image_url');
+            $table->dateTime('last_checked_at');
+            $table->string('offer_url');
             $table->timestamps();
+
+//            $table->foreign('page_id')->references('id')->on('pages');
         });
     }
 
@@ -27,6 +33,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('offers');
     }
 }
