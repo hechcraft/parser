@@ -47,6 +47,10 @@ class Parser extends Command
         $currentTime = Carbon::now()->toDateTimeString();
 
         foreach ($getParser->parser() as $item) {
+            if (Offers::where('offer_url', $item->url)->first()){
+                return;
+            }
+
             Offers::create([
                 'page_id' => 1,
                 'name' => $item->name,

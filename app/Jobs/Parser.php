@@ -2,7 +2,10 @@
 
 namespace App\Jobs;
 
+use App\Models\Offers;
+use App\Models\PriceHistory;
 use App\Parser\MarketPlaceParser;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -14,7 +17,7 @@ class Parser implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $url;
+    public $url;
     /**
      * Create a new job instance.
      *
@@ -32,6 +35,27 @@ class Parser implements ShouldQueue
      */
     public function handle()
     {
-        $getParser = new MarketPlaceParser($this->argument('url'));
+        $getParser = new MarketPlaceParser($this->url);
+        $currentTime = Carbon::now()->toDateTimeString();
+
+        foreach ($getParser->parser() as $item) {
+            if (Offers::where('offer_url', $item->url)->first()){
+                return;
+            }
+
+            Offers::create([
+                'page_id' => 1,
+                'name' => $item->name,
+                'image_url' => $item->url,
+                'last_checked_at' => $currentTime,
+                'offer_url' => $item->url,
+            ]);
+
+            PriceHistory::create([
+                'offer_id' => Offers::latest()->first()->id,
+                'price' => $item->price,
+                'checked_at' => $currentTime,
+            ]);
+        }
     }
 }
