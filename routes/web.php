@@ -16,3 +16,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::any('/webhook', function () {
+    $test = new \Telegram\Bot\Api();
+
+    Telegram::commandsHandler(true);
+    return 'ok';
+});
+
