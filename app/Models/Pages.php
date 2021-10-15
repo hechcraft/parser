@@ -18,4 +18,16 @@ use Illuminate\Database\Eloquent\Model;
 class Pages extends Model
 {
     use HasFactory;
+
+    protected $guarded = [];
+
+    public function user()
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
+
+    public function offer()
+    {
+        return $this->hasOne(Offers::class, 'page_id');
+    }
 }

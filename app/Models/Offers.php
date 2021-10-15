@@ -22,4 +22,26 @@ class Offers extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function priceHistory(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(PriceHistory::class, 'offer_id');
+    }
+
+    public function lastPrice(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(PriceHistory::class, 'offer_id')->latestOfMany();
+    }
+
+    public function getMaxPrice(int $offerId)
+    {
+        $offer = Offers::whereId($offerId)->first();
+
+        $priceHistoryCollect = collect();
+        $offer->priceHistory->map(function ($item) use ($priceHistoryCollect) {
+            return $priceHistoryCollect->push(intval($item->price));
+        });
+
+        return $priceHistoryCollect->max();
+    }
 }
