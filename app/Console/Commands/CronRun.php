@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Pages;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use React\EventLoop\Loop;
@@ -39,14 +40,15 @@ class CronRun extends Command
      */
     public function handle()
     {
-        $url = "https://www.dns-shop.ru/product/96b1191c66923332/videokarta-kfa2-geforce-210-21ggf4hi00nk/";
-
         $loop = Loop::get();
 
-        $loop->addPeriodicTimer(60, function () use ($url) {
-            \App\Jobs\Parser::dispatch($url);
-        });
-
+        foreach (Pages::all() as $page) {
+            $currentUrl = $page->url;
+            $currentPageId = $page->id;
+            $loop->addPeriodicTimer(60, function () use ($currentUrl, $currentPageId) {
+                \App\Jobs\Parser::dispatch($currentUrl, $currentPageId);
+            });
+        }
         $loop->run();
     }
 }

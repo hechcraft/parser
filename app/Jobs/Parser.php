@@ -18,14 +18,17 @@ class Parser implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $url;
+    public $pageId;
+
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(string $url)
+    public function __construct(string $url, int $pageId)
     {
         $this->url = $url;
+        $this->pageId = $pageId;
     }
 
     /**
@@ -39,20 +42,32 @@ class Parser implements ShouldQueue
         $currentTime = Carbon::now()->toDateTimeString();
 
         foreach ($getParser->parser() as $item) {
-            if (Offers::where('offer_url', $item->url)->first()){
+
+            $currentOffer = Offers::where('offer_url', $item->url)->first();
+
+            if (!isset($currentOffer)) {
+                Offers::firstOrCreate([
+                    'page_id' => $this->pageId,
+                    'name' => $item->name,
+                    'image_url' => $item->image,
+                    'last_checked_at' => $currentTime,
+                    'offer_url' => $item->url,
+                ]);
+
+                PriceHistory::create([
+                    'offer_id' => Offers::latest()->first()->id,
+                    'price' => $item->price,
+                    'checked_at' => $currentTime,
+                ]);
                 return;
             }
 
-            Offers::create([
-                'page_id' => 1,
-                'name' => $item->name,
-                'image_url' => $item->url,
-                'last_checked_at' => $currentTime,
-                'offer_url' => $item->url,
-            ]);
+            if ($currentOffer->lastPrice->price == $item->price) {
+                return;
+            }
 
             PriceHistory::create([
-                'offer_id' => Offers::latest()->first()->id,
+                'offer_id' => $currentOffer->id,
                 'price' => $item->price,
                 'checked_at' => $currentTime,
             ]);

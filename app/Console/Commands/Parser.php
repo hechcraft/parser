@@ -47,7 +47,7 @@ class Parser extends Command
         $currentTime = Carbon::now()->toDateTimeString();
 
         foreach ($getParser->parser() as $item) {
-            if (Offers::where('offer_url', $item->url)->first()){
+            if (Offers::where('offer_url', $item->url)->first()->lastPrice->price == $item->price) {
                 return;
             }
 
