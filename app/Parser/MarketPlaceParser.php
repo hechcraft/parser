@@ -35,7 +35,7 @@ class MarketPlaceParser
             return $parserOption "));
         $browser->close();
 
-        return collect($parserData)->map(function ($item){
+        return collect($parserData)->map(function ($item) {
             return PageOffer::fromProvider($item);
         });
     }

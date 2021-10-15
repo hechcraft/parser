@@ -21,7 +21,7 @@ class OlxSingle implements ParserProvider
     public function parserOption(): string
     {
         return "[{
-                  price: document.querySelector('[data-testid=ad-price-container] h3').innerText,
+                  price: document.querySelector('[data-testid=ad-price-container] h3').innerText.replace(/[^0-9]/g,''),
                   url: document.URL,
                   image: document.querySelector('.swiper-zoom-container > img').getAttribute('src'),
                   title: document.querySelector('[data-cy=ad_title]').innerText

@@ -21,13 +21,19 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
 Route::get('/telegram_auth', [\App\Http\Controllers\AuthController::class, 'telegramAuth']);
 
 Route::any('/webhook', function () {
-    $test = new \Telegram\Bot\Api();
 
     Telegram::commandsHandler(true);
     return 'ok';
 });
+
+Route::get('/test', function () {
+    \App\Jobs\SendOffers::dispatch();
+});
+
+Route::post('/page', [\App\Http\Controllers\PageController::class, 'store'])->name('page.store');
+Route::get('/page', [\App\Http\Controllers\PageController::class, 'create'])->name('page.create');

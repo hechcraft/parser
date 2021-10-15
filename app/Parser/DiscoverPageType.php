@@ -37,7 +37,7 @@ class DiscoverPageType
 
         foreach ($this->pageTypes as $type) {
             $typeClass = new $type;
-            if ($typeClass->matchesUrl($host) && $this->page->evaluate(JsFunction::createWithBody($typeClass->getPageDiscoveryScript()))) {
+            if ($typeClass->matchesUrl($host)) {
                 return $typeClass;
             }
         }

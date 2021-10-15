@@ -11,7 +11,7 @@ class PageOffer
     public $image;
     public $url;
 
-    private function __construct(string $name, string $price,$image, string $url)
+    private function __construct(string $name, string $price, string $image, string $url)
     {
         $this->name = $name;
         $this->price = $price;
@@ -22,10 +22,10 @@ class PageOffer
     public static function fromProvider($parserData): self
     {
         return new self(
-            data_get($parserData, 'name'),
+            data_get($parserData, 'title'),
             data_get($parserData, 'price'),
             data_get($parserData, 'image'),
-            data_get($parserData, 'url')
+            data_get($parserData, 'url'),
         );
     }
 }
