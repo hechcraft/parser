@@ -37,14 +37,13 @@ class SendOffers implements ShouldQueue
 
         $pages = Pages::all();
 
-//        $offers = \App\Models\Offers::all();
-
         foreach ($pages as $page) {
-            $stringFormat = 'Название: %s,' . PHP_EOL . 'Цена: %s,' . PHP_EOL . 'Ссылка: %s,';
+            $stringFormat ='Название: %s,' . PHP_EOL . 'Цена: %s' . PHP_EOL . '<a href="%s">Offer url</a>';
             $response = $telegram->sendPhoto([
                 'chat_id' => $page->user->telegram_id,
                 'photo' => \Telegram\Bot\FileUpload\InputFile::create($page->offer->image_url, 'photo'),
-                'caption' => sprintf($stringFormat, $page->offer->name, $page->offer->lastPrice->price . ' ₽', $page->offer->offer_url),
+                'caption' => sprintf($stringFormat, $page->offer->name, $page->offer->lastPrice->price_str, $page->offer->offer_url),
+                'parse_mode' => 'HTML',
             ]);
 
             $messageId = $response->getMessageId();

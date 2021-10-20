@@ -40,7 +40,7 @@ class PageController extends Controller
         ]);
 
         Pages::create([
-            'user_id' => 2,
+            'user_id' => auth()->user()->id,
             'url' => $request->url,
             'type' => $request->url_type,
         ]);

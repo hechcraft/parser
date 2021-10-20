@@ -3,6 +3,7 @@
 
 namespace App\Parser;
 
+use App\Parser\Avito\Avito;
 use App\Parser\Avito\AvitoGroup;
 use App\Parser\Avito\AvitoSingle;
 use App\Parser\Dns\DnsSingle;
@@ -25,6 +26,10 @@ class DiscoverPageType
         OlxGroup::class,
     );
 
+    private $test = array(
+        Avito::class,
+    );
+
     public function __construct(string $url, $page)
     {
         $this->url = $url;
@@ -37,7 +42,7 @@ class DiscoverPageType
 
         foreach ($this->pageTypes as $type) {
             $typeClass = new $type;
-            if ($typeClass->matchesUrl($host)) {
+            if ($typeClass->matchesUrl($host) && $this->page->evaluate(JsFunction::createWithBody($typeClass->getPageDiscoveryScript()))) {
                 return $typeClass;
             }
         }

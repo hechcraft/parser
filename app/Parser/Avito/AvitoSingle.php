@@ -10,7 +10,7 @@ class AvitoSingle implements ParserProvider
 {
     public function getPageDiscoveryScript(): string
     {
-        return "document.querySelector('.title-info-title-text')";
+        return "return document.querySelector('.title-info-title-text')";
     }
 
     public function matchesUrl(string $host): bool
@@ -22,6 +22,7 @@ class AvitoSingle implements ParserProvider
     {
         return "[{
                   price: document.querySelector('span[class^=price-value-string]').innerText.replace(/[^0-9]/g,''),
+                  priceStr: document.querySelector('span[class^=price-value-string]').innerText,
                   title: document.querySelector('span[class=title-info-title-text]').innerText,
                   image: document.querySelector('div[class^=gallery-img-frame] > img').getAttribute('src'),
                   url: document.URL,

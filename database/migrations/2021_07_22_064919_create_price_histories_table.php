@@ -17,7 +17,9 @@ class CreatePriceHistoriesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('offer_id');
             $table->string('price');
+            $table->string('price_str');
             $table->dateTime('checked_at');
+
 
             $table->foreign('offer_id')->references('id')->on('offers');
         });

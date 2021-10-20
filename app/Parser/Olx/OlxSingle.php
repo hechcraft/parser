@@ -10,7 +10,7 @@ class OlxSingle implements ParserProvider
 {
     public function getPageDiscoveryScript(): string
     {
-        return "return document.querySelector('[name=user_ads]')";
+        return "return Array.from(document.querySelectorAll('[name=user_ads]')).length";
     }
 
     public function matchesUrl(string $host): bool
@@ -22,6 +22,7 @@ class OlxSingle implements ParserProvider
     {
         return "[{
                   price: document.querySelector('[data-testid=ad-price-container] h3').innerText.replace(/[^0-9]/g,''),
+                  priceStr: document.querySelector('[data-testid=ad-price-container] h3').innerText,
                   url: document.URL,
                   image: document.querySelector('.swiper-zoom-container > img').getAttribute('src'),
                   title: document.querySelector('[data-cy=ad_title]').innerText

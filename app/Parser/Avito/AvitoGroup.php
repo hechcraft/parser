@@ -10,7 +10,7 @@ class AvitoGroup implements ParserProvider
 {
     public function getPageDiscoveryScript(): string
     {
-        return "return document.querySelector('div[class^=iva-item-content]') ? document.querySelector('div[class^=iva-item-content]').innerText : null";
+        return "return Array.from(document.querySelectorAll('div[class^=iva-item-content]')).length";
     }
 
     public function matchesUrl(string $host): bool
@@ -23,7 +23,8 @@ class AvitoGroup implements ParserProvider
         return "Array.from(document.querySelectorAll('div[class^=iva-item-content]'))
                         .map(node => ({title: node.querySelector('h3[itemprop=name]').innerText,
                         url: 'https://www.avito.ru' + node.querySelector('div[class^=iva-item] a').getAttribute('href'),
-                        price: node.querySelector('span[class^=price-text]').innerText,
-                        image: node.querySelector('img[class^=photo-slider-image]') ? node.querySelector('img[class^=photo-slider-image]').getAttribute('src') : 'Not found'}))";
+                        price: node.querySelector('span[class^=price-text]').innerText.replace(/[^0-9]/g,''),
+                        priceStr: node.querySelector('span[class^=price-text]').innerText,
+                        image: node.querySelector('img[class^=photo-slider-image]').getAttribute('src')}))";
     }
 }

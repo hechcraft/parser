@@ -57,6 +57,7 @@ class Parser implements ShouldQueue
                 PriceHistory::create([
                     'offer_id' => Offers::latest()->first()->id,
                     'price' => $item->price,
+                    'price_str' => $item->priceStr,
                     'checked_at' => $currentTime,
                 ]);
                 return;
@@ -69,6 +70,7 @@ class Parser implements ShouldQueue
             PriceHistory::create([
                 'offer_id' => $currentOffer->id,
                 'price' => $item->price,
+                'price_str' => $item->priceStr,
                 'checked_at' => $currentTime,
             ]);
         }
