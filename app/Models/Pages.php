@@ -21,13 +21,13 @@ class Pages extends Model
 
     protected $guarded = [];
 
-    public function user()
+    public function user(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(User::class, 'id', 'user_id');
     }
 
-    public function offer()
+    public function offer(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasOne(Offers::class, 'page_id');
+        return $this->hasMany(Offers::class, 'page_id');
     }
 }

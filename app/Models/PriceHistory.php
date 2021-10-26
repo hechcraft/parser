@@ -19,4 +19,9 @@ class PriceHistory extends Model
 
     protected $guarded = [];
     public $timestamps = false;
+
+    public function offer(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Offers::class);
+    }
 }

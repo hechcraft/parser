@@ -33,15 +33,8 @@ class Offers extends Model
         return $this->hasOne(PriceHistory::class, 'offer_id')->latestOfMany();
     }
 
-    public function getMaxPrice(int $offerId)
+    public function page(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        $offer = Offers::whereId($offerId)->first();
-
-        $priceHistoryCollect = collect();
-        $offer->priceHistory->map(function ($item) use ($priceHistoryCollect) {
-            return $priceHistoryCollect->push(intval($item->price));
-        });
-
-        return $priceHistoryCollect->max();
+        return $this->belongsTo(Pages::class);
     }
 }
