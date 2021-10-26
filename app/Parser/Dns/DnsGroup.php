@@ -10,7 +10,7 @@ class DnsGroup implements ParserProvider
 {
     public function getPageDiscoveryScript(): string
     {
-        return "return document.querySelector('div[class=products-list__content]')";
+        return "return Array.from(document.querySelectorAll('div[data-id=product]')).length";
     }
 
     public function matchesUrl(string $host): bool

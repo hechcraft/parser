@@ -35,12 +35,14 @@ class MarketPlaceParser
         Parser::scrollPage($page);
 
         $pageType = new DiscoverPageType($this->url, $page);
-        dd($pageType->discover());
+
         $parserOption = $pageType->discover()->parserOption();
+
         $parserData = $page->evaluate(JsFunction::createWithBody("
             return $parserOption "));
+
         $browser->close();
-        dd($parserData);
+
         return collect($parserData)->map(function ($item) {
             return PageOffer::fromProvider($item);
         });
