@@ -15,14 +15,14 @@ class CreateOffersTable extends Migration
     {
         Schema::create('offers', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('page_id')->nullable();
+            $table->unsignedBigInteger('page_id');
             $table->string('name');
             $table->string('image_url');
             $table->dateTime('last_checked_at');
             $table->string('offer_url');
             $table->timestamps();
 
-//            $table->foreign('page_id')->references('id')->on('pages');
+            $table->foreign('page_id')->references('id')->on('pages')->onDelete('cascade');
         });
     }
 
