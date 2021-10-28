@@ -25,6 +25,7 @@ class OlxGroup implements ParserProvider
                             url: node.querySelector('h3>a[class$=detailsLink]').getAttribute('href'),
                             price: node.querySelector('p.price > strong').innerText.replace(/[^0-9]/g,''),
                             priceStr: node.querySelector('p.price > strong').innerText,
-                            image: node.querySelector('a[class^=thumb] > img').getAttribute('src')}))";
+                            image: (node.querySelector('a[class^=thumb] > img') === null) ? '/assets/a4dd64d3/images/theme/nophoto-120x120.png'
+                            : node.querySelector('a[class^=thumb] > img').getAttribute('src')}))";
     }
 }

@@ -24,8 +24,10 @@ class DnsSingle implements ParserProvider
                         title: document.querySelector('.product-card-top__title').innerText,
                         price: document.querySelector('.product-buy__price').innerText.replace(/[^0-9]/g,''),
                         priceStr: document.querySelector('.product-buy__price').innerText,
-                        image: document.querySelector('img[class^=product-images-slider__img]').getAttribute('src'),
                         url: document.URL,
+                        image: document.querySelector('img[class^=product-images-slider__main-img]').getAttribute('src')
+                        ? document.querySelector('img[class^=product-images-slider__main-img]').getAttribute('src')
+                        : '/assets/a4dd64d3/images/theme/nophoto-120x120.png',
                         }]";
     }
 }
