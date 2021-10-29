@@ -39,8 +39,8 @@ class SendCurrentOffer implements ShouldQueue
         $stringFormat ='Название: %s,' . PHP_EOL . 'Цена: %s' . PHP_EOL . '<a href="%s">Offer url</a>';
         $response = $telegram->sendPhoto([
             'chat_id' => $this->currentOffer->page->user->telegram_id,
-            'photo' => \Telegram\Bot\FileUpload\InputFile::create($this->currentOffer->image_url, 'photo'),
-            'caption' => sprintf($stringFormat, $this->currentOffer->name, $this->currentPrice, $this->currentOffer->offer_url),
+            'photo' => \Telegram\Bot\FileUpload\InputFile::create(asset($this->currentOffer->image_url), 'photo'),
+            'caption' => sprintf($stringFormat, $this->currentOffer->name, str_replace("\n", '', $this->currentPrice), $this->currentOffer->offer_url),
             'parse_mode' => 'HTML',
         ]);
 

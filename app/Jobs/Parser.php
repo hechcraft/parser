@@ -38,41 +38,52 @@ class Parser implements ShouldQueue
      */
     public function handle()
     {
-        $getParser = new MarketPlaceParser($this->url);
         $currentTime = Carbon::now()->toDateTimeString();
+        $getParser = new MarketPlaceParser($this->url);
+
+        $helpers = new \App\Helpers\Parser();
 
         foreach ($getParser->parser() as $item) {
-
             $currentOffer = Offers::where('offer_url', $item->url)->first();
 
             if (!isset($currentOffer)) {
-                Offers::firstOrCreate([
-                    'page_id' => $this->pageId,
+                $offer = Offers::firstOrCreate([
+                    'page_id' => 1,
                     'name' => $item->name,
                     'image_url' => $item->image,
                     'last_checked_at' => $currentTime,
                     'offer_url' => $item->url,
                 ]);
-
-                PriceHistory::create([
-                    'offer_id' => Offers::latest()->first()->id,
+                $price = PriceHistory::create([
+                    'offer_id' => $offer->id,
                     'price' => $item->price,
                     'price_str' => $item->priceStr,
                     'checked_at' => $currentTime,
                 ]);
-                return;
+
+                SendCurrentOffer::dispatch($offer, $item->priceStr);
             }
 
-            if ($currentOffer->lastPrice->price == $item->price) {
-                return;
-            }
+            if (isset($currentOffer)) {
+                $currentOffer->update([
+                    'last_checked_at' => $currentTime,
+                ]);
 
-            PriceHistory::create([
-                'offer_id' => $currentOffer->id,
-                'price' => $item->price,
-                'price_str' => $item->priceStr,
-                'checked_at' => $currentTime,
-            ]);
+                if ($currentOffer->lastPrice->price != $item->price) {
+                    PriceHistory::create([
+                        'offer_id' => $currentOffer->id,
+                        'price' => $item->price,
+                        'price_str' => $item->priceStr,
+                        'checked_at' => $currentTime,
+                    ]);
+                }
+
+                if ($currentOffer->page->type === 'groupMinPrice' &&
+                    $helpers->getOfferMinPrice($currentOffer->page->id->price > $currentOffer->lastPrice->price)) {
+                    SendCurrentOffer::dispatch($currentOffer, $item->priceStr);
+                    break;
+                }
+            }
         }
     }
 }
