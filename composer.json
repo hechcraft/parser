@@ -11,7 +11,9 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "guzzlehttp/psr7": "1.*",
         "irazasyed/telegram-bot-sdk": "3.4.1",
+        "kyslik/column-sortable": "^6.4",
         "laravel/framework": "^8.40",
+        "laravel/horizon": "^5.7",
         "laravel/tinker": "^2.5",
         "nesk/puphpeteer": "^2.0",
         "react/event-loop": "1.2.0"

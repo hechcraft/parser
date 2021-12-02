@@ -11,8 +11,10 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js').postCss('resources/css/app.css', 'public/css', [
-    require('postcss-import'),
-    require('tailwindcss'),
-    require('autoprefixer'),
-]);
+mix.js('resources/js/app.js', 'public/js')
+    .sass('resources/sass/app.scss', 'public/css')
+    .copy('node_modules/semantic-ui-css/semantic.min.css','public/css/semantic.min.css')
+    .copy('node_modules/semantic-ui-css/semantic.min.js','public/js/semantic.min.js')
+    .copy('node_modules/semantic-ui-css/themes/default/assets/fonts/icons.woff','public/css/themes/default/assets/fonts/icons.woff')
+    .copy('node_modules/semantic-ui-css/themes/default/assets/fonts/icons.woff2','public/css/themes/default/assets/fonts/icons.woff2')
+    .copy('node_modules/semantic-ui-css/themes/default/assets/fonts/icons.ttf','public/css/themes/default/assets/fonts/icons.ttf');

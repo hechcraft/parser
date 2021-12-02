@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
 /**
  * App\Models\PriceHistory
  *
@@ -16,6 +15,8 @@ use Illuminate\Database\Eloquent\Model;
 class PriceHistory extends Model
 {
     use HasFactory;
+
+    public $sortable = ['price'];
 
     protected $guarded = [];
     public $timestamps = false;

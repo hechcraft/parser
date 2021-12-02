@@ -1,36 +1,47 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'Laravel') }}</title>
 
-        <!-- Fonts -->
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
+    <!-- Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
 
-        <!-- Styles -->
-        <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-
-        <!-- Scripts -->
-        <script src="{{ asset('js/app.js') }}" defer></script>
-    </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
-{{--            @include('layouts.navigation')--}}
-
-            <!-- page Heading -->
-            <header class="bg-white shadow">
-                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-{{--                    {{ $header }}--}}
-                </div>
-            </header>
-
-            <!-- page Content -->
-            <main>
-                {{ $slot }}
-            </main>
+    <script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/semantic.min.css') }}">
+    <script src="{{ asset('js/semantic.min.js') }}"></script>
+</head>
+<body class="font-sans antialiased">
+<div class="ui container">
+    @include('layouts.navigation')
+</div>
+@php($currentUrl = Request::segment(1))
+@if($currentUrl != null)
+    <div class="ui container">
+        {{$slot}}
+    </div>
+@else
+    <div id="background" style="background-image: url({{asset('img/img-decor-01.jpg')}}); ">
+        <div class="ui container">
+            <h1 style="color: white; text-align: center; padding: 250px 0 0; font-size: 50px  ">MarkerPlace Parser.</h1>
+            <h1 style="color: #726397; text-align: center">Version 0.1</h1>
         </div>
-    </body>
+    </div>
+@endif
+</body>
 </html>
+<style>
+    #background {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        background-size: cover;
+        background-attachment: fixed;
+    }
+</style>

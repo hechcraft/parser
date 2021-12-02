@@ -22,8 +22,8 @@ class DnsSingle implements ParserProvider
     {
         return "[{
                         title: document.querySelector('.product-card-top__title').innerText,
-                        price: document.querySelector('.product-buy__price').innerText.replace(/[^0-9]/g,''),
-                        priceStr: document.querySelector('.product-buy__price').innerText,
+                        price: document.querySelector('.product-buy__price').innerText.replace(/₽.*/g,'').replace(/[^0-9]/g,''),
+                        priceStr: document.querySelector('.product-buy__price').innerText.replace(/₽.*/g,'₽'),
                         url: document.URL,
                         image: document.querySelector('img[class^=product-images-slider__main-img]').getAttribute('src')
                         ? document.querySelector('img[class^=product-images-slider__main-img]').getAttribute('src')

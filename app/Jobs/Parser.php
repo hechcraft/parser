@@ -48,7 +48,7 @@ class Parser implements ShouldQueue
 
             if (!isset($currentOffer)) {
                 $offer = Offers::firstOrCreate([
-                    'page_id' => 1,
+                    'page_id' => $this->pageId,
                     'name' => $item->name,
                     'image_url' => $item->image,
                     'last_checked_at' => $currentTime,
@@ -78,8 +78,12 @@ class Parser implements ShouldQueue
                     ]);
                 }
 
-                if ($currentOffer->page->type === 'groupMinPrice' &&
-                    $helpers->getOfferMinPrice($currentOffer->page->id->price > $currentOffer->lastPrice->price)) {
+//                if ($currentOffer->lastPrice->price === $item->price){
+//                    break;
+//                }
+
+                if ($currentOffer->page->type === 'groupMinPrice' && $helpers->getOfferMinPrice($currentOffer->page->id) !== null &&
+                    $helpers->getOfferMinPrice($currentOffer->page->id > $currentOffer->lastPrice->price)) {
                     SendCurrentOffer::dispatch($currentOffer, $item->priceStr);
                     break;
                 }

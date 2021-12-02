@@ -1,5 +1,10 @@
-@props(['value'])
+@props(['input', 'error' => ''])
 
-<label {{ $attributes->merge(['class' => 'block font-medium text-sm text-gray-700']) }}>
-    {{ $value ?? $slot }}
-</label>
+<div class="ui fluid form">
+    <div class="field">
+        {!! $input !!}
+        <div class="ui pointing label {{$error}}">
+            {{$slot}}
+        </div>
+    </div>
+</div>

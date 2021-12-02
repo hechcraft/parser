@@ -14,6 +14,6 @@ class StartCommand extends Command
 
     public function handle()
     {
-        $this->replyWithMessage(['text' => 'Hello! Welcome to our bot, Here are our available commands:']);
+        $this->replyWithMessage(['text' => 'Hello! Welcome to our bot']);
     }
 }

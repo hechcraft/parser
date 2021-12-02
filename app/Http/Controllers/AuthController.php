@@ -27,4 +27,10 @@ class AuthController extends Controller
         auth()->login($currentUser, true);
         return redirect()->intended(RouteServiceProvider::HOME);
     }
+
+    public function logout()
+    {
+        Auth::logout();
+        return redirect('/');
+    }
 }

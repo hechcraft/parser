@@ -9,6 +9,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Telegram\Bot\Api;
+use Telegram\Bot\FileUpload\InputFile;
 
 class SendCurrentOffer implements ShouldQueue
 {
@@ -16,6 +17,7 @@ class SendCurrentOffer implements ShouldQueue
 
     private $currentOffer;
     private $currentPrice;
+
     /**
      * Create a new job instance.
      *
@@ -36,13 +38,22 @@ class SendCurrentOffer implements ShouldQueue
     {
         $telegram = new Api();
 
-        $stringFormat ='Название: %s,' . PHP_EOL . 'Цена: %s' . PHP_EOL . '<a href="%s">Offer url</a>';
-        $response = $telegram->sendPhoto([
-            'chat_id' => $this->currentOffer->page->user->telegram_id,
-            'photo' => \Telegram\Bot\FileUpload\InputFile::create(asset($this->currentOffer->image_url), 'photo'),
-            'caption' => sprintf($stringFormat, $this->currentOffer->name, str_replace("\n", '', $this->currentPrice), $this->currentOffer->offer_url),
-            'parse_mode' => 'HTML',
-        ]);
+        $stringFormat = 'Название: %s,' . PHP_EOL . 'Цена: %s' . PHP_EOL . '<a href="%s">Offer url</a>';
+        try {
+            $response = $telegram->sendPhoto([
+                'chat_id' => $this->currentOffer->page->user->telegram_id,
+                'photo' => \Telegram\Bot\FileUpload\InputFile::create(asset($this->currentOffer->image_url), 'photo'),
+                'caption' => sprintf($stringFormat, $this->currentOffer->name, str_replace("\n", '', $this->currentPrice), $this->currentOffer->offer_url),
+                'parse_mode' => 'HTML',
+            ]);
+
+        } catch (\Exception $exception) {
+            $response = $telegram->sendMessage([
+                'chat_id' => $this->currentOffer->page->user->telegram_id,
+                'text' => sprintf($stringFormat, $this->currentOffer->name, str_replace("\n", '', $this->currentPrice), $this->currentOffer->offer_url),
+                'parse_mode' => 'HTML',
+            ]);
+        }
 
         $messageId = $response->getMessageId();
     }

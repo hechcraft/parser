@@ -2,19 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\PaginatorHelpers;
+use App\Helpers\Parser;
+use App\Models\Offers;
 use App\Models\Pages;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class PageController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return View
      */
-    public function index()
+    public function index(): View
     {
-        //
+        $helpers = new Parser();
+        $pages = Pages::where('user_id', auth()->user()->id)->get();
+        $minPrice = collect();
+        foreach ($pages as $page) {
+            if ($page->offer->count() > 0) {
+                $minPrice->push($helpers->getOfferMinPrice($page->id));
+            }
+        }
+        return view('task.index', ['minPrice' => PaginatorHelpers::paginate($minPrice, 12, ['path' => 'task'])]);
     }
 
     /**
@@ -24,19 +36,20 @@ class PageController extends Controller
      */
     public function create()
     {
-        return view('page.create');
+        return view('task.create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
         $request->validate([
-            'url' => 'required',
+            'url' => 'required|active_url',
+            'url_type' => 'required',
         ]);
 
         Pages::create([
@@ -45,24 +58,30 @@ class PageController extends Controller
             'type' => $request->url_type,
         ]);
 
-        return redirect()->back();
+        return redirect()->route('task.index');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
      */
-    public function show($id)
+    public function show(Pages $page): View
     {
-        //
+        $lastOffer = Offers::where('page_id', $page->id)->latest()->first();
+        $helpers = new Parser();
+        $graphData = $helpers->getDataForGraph($page->type, $page->id);
+        $offerMinPrice = $helpers->getOfferMinPrice($page->id);
+        $offers = Offers::where('page_id', $page->id)->sortable('name')->paginate(15);
+
+        return view('task.show', ['page' => $page, 'price' => $graphData[0], 'data' => $graphData[1],
+            'lastOffer' => $lastOffer, 'offerMinPrice' => $offerMinPrice, 'offers' => $offers]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -73,8 +92,8 @@ class PageController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -82,14 +101,9 @@ class PageController extends Controller
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function destroy(Pages $page): \Illuminate\Http\RedirectResponse
     {
-        //
+        $page->delete();
+        return redirect()->route('task.index');
     }
 }

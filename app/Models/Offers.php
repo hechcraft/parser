@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Kyslik\ColumnSortable\Sortable;
 
 /**
  * App\Models\Offers
@@ -19,7 +20,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Offers extends Model
 {
-    use HasFactory;
+    use HasFactory, Sortable;
+
+    public $sortable = ['name'];
 
     protected $guarded = [];
 

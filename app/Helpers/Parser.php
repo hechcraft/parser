@@ -24,13 +24,8 @@ class Parser
         } while ($clientHeight >= $currentCounter);
     }
 
-    /**
-     * @param int $pageId
-     * @param string $method min or max
-     * @return int
-     */
 
-    public function getOfferMinPrice(int $pageId): PriceHistory
+    public function getOfferMinPrice(int $pageId)
     {
         return $this->sortOfferPrices($pageId, 'min')->sortBy('price')->first();
     }
@@ -48,9 +43,58 @@ class Parser
         foreach ($offers as $offer) {
             $offerPrices = $offer->priceHistory;
             $minPriceOffer = $offerPrices->where('price', $offerPrices->$method('price'))->first();
-            $priceHistoryCollect->push($minPriceOffer);
+            if ($minPriceOffer != null) {
+                $priceHistoryCollect->push($minPriceOffer);
+            }
         }
 
         return $priceHistoryCollect;
+    }
+
+    public function getDataForGraph(string $method, int $pageId): \Illuminate\Support\Collection
+    {
+        if ($method === 'single'){
+            return $this->singletonDataGraph($pageId);
+        }
+
+        return $this->multiDataGraph($pageId);
+    }
+
+    private function singletonDataGraph(int $pageId): \Illuminate\Support\Collection
+    {
+        $offer = Offers::where('page_id', $pageId)->first();
+        $graphData = collect();
+        $prices = collect();
+        $dates = collect();
+
+        foreach ($offer->priceHistory as $price){
+            $prices->push($price->price);
+            $dates->push($price->checked_at);
+        }
+
+        $graphData->push($prices);
+        $graphData->push($dates);
+
+        return $graphData;
+    }
+
+    private function multiDataGraph(int $pageId): \Illuminate\Support\Collection
+    {
+        $offers = Offers::where('page_id', $pageId)->get();
+        $graphData = collect();
+        $prices = collect();
+        $dates = collect();
+
+        foreach ($offers as $offer) {
+            if ($offer->lastPrice) {
+                $prices->push($offer->lastPrice->price);
+                $dates->push($offer->lastPrice->checked_at);
+            }
+        }
+
+        $graphData->push($prices);
+        $graphData->push($dates);
+
+        return $graphData;
     }
 }
