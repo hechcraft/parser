@@ -3,6 +3,7 @@
 
 namespace App\Parser;
 
+use App\Parser\Avito\Avito;
 use App\Parser\Avito\AvitoGroup;
 use App\Parser\Avito\AvitoSingle;
 use App\Parser\Dns\DnsSingle;
@@ -23,6 +24,10 @@ class DiscoverPageType
         AvitoGroup::class,
         OlxSingle::class,
         OlxGroup::class,
+    );
+
+    private $test = array(
+        Avito::class,
     );
 
     public function __construct(string $url, $page)

@@ -10,7 +10,7 @@ class OlxGroup implements ParserProvider
 {
     public function getPageDiscoveryScript(): string
     {
-        return "return document.querySelector('#offers_table .offer-wrapper')";
+        return "return Array.from(document.querySelectorAll('#offers_table .offer-wrapper')).length";
     }
 
     public function matchesUrl(string $host): bool
@@ -21,9 +21,11 @@ class OlxGroup implements ParserProvider
     public function parserOption(): string
     {
         return "Array.from(document.querySelectorAll('#offers_table .offer-wrapper')).
-            map(node => ({ name: node.querySelector('h3 >a[class$=detailsLink]').innerText,
+            map(node => ({ title: node.querySelector('h3 >a[class$=detailsLink]').innerText,
                             url: node.querySelector('h3>a[class$=detailsLink]').getAttribute('href'),
-                            price: node.querySelector('p.price > strong').innerText,
-                            img: node.querySelector('a[class^=thumb] > img') ? node.querySelector('a[class^=thumb] > img').getAttribute('src') : null}))";
+                            price: node.querySelector('p.price > strong').innerText.replace(/[^0-9]/g,''),
+                            priceStr: node.querySelector('p.price > strong').innerText,
+                            image: (node.querySelector('a[class^=thumb] > img') === null) ? '/assets/a4dd64d3/images/theme/nophoto-120x120.png'
+                            : node.querySelector('a[class^=thumb] > img').getAttribute('src')}))";
     }
 }
